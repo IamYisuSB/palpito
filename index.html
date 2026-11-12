@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Pálpito: adivina la palabra de 5 letras del día en 6 intentos. Un reto nuevo cada medianoche." />
+  <meta name="theme-color" content="#f6f1e7" />
+  <title>Pálpito — la palabra del día</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+</head>
+<body>
+  <div id="app">
+    <header id="header">
+      <div class="header-side left">
+        <button id="btn-help" class="icon-btn" aria-label="Cómo jugar" title="Cómo jugar">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-.9-5.2h1.8V17h-1.8v-2.2zM11 7.1c.3-.3.8-.4 1.4-.4.6 0 1.1.1 1.4.4.3.3.5.7.5 1.2 0 .3-.1.6-.2.8-.2.2-.4.4-.6.6l-.6.5c-.2.2-.3.4-.3.7v.6h-1.5v-.8c0-.3.1-.6.2-.8.1-.2.3-.4.6-.6l.6-.5c.2-.2.3-.4.3-.6 0-.2-.1-.4-.2-.5-.2-.1-.4-.2-.7-.2-.3 0-.5.1-.7.2-.2.1-.3.3-.4.5l-1.3-.5c.1-.3.3-.6.6-.8z"/></svg>
+        </button>
+      </div>
+      <h1 class="title" aria-label="Pálpito"><span class="logo-tile correct">P</span><span class="logo-tile present">Á</span><span class="logo-tile absent">L</span><span class="logo-tile correct">P</span><span class="logo-tile present">I</span><span class="logo-tile absent">T</span><span class="logo-tile correct">O</span></h1>
+      <div class="header-side right">
+        <button id="btn-stats" class="icon-btn" aria-label="Estadísticas" title="Estadísticas">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M4 20h3V10H4v10zm6.5 0h3V4h-3v16zM17 20h3v-7h-3v7z"/></svg>
+        </button>
+        <button id="btn-settings" class="icon-btn" aria-label="Ajustes" title="Ajustes">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.4 7.4 0 0 0-1.7-1L15 3.5h-4l-.3 2.5a7.4 7.4 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.6 7.6 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.4 7.4 0 0 0 1.7 1l.3 2.5h4l.3-2.5a7.4 7.4 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6zM13 15a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" transform="translate(-1 -1)"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <main id="main">
+      <div id="board" aria-label="Tablero de juego"></div>
+      <div id="keyboard" aria-label="Teclado"></div>
+    </main>
+
+    <!-- Modal: Cómo jugar -->
+    <div id="modal-help" class="overlay hidden">
+      <div class="modal" role="dialog" aria-modal="true" aria-label="Cómo jugar">
+        <div class="modal-header">
+          <h2>CÓMO JUGAR</h2>
+          <button class="icon-btn close" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="modal-body">
+          <p>¿Tienes un pálpito? Adivina la <b>palabra de 5 letras</b> en 6 intentos.</p>
+          <p>Después de cada intento, el color de las casillas cambia para mostrar qué cerca estás.</p>
+          <div class="example-row">
+            <div class="tile mini correct">A</div><div class="tile mini">R</div><div class="tile mini">B</div><div class="tile mini">O</div><div class="tile mini">L</div>
+          </div>
+          <p>La <b>A</b> está en la palabra y en el sitio correcto.</p>
+          <div class="example-row">
+            <div class="tile mini">P</div><div class="tile mini present">A</div><div class="tile mini">P</div><div class="tile mini">A</div><div class="tile mini">S</div>
+          </div>
+          <p>La <b>A</b> está en la palabra pero en otro sitio.</p>
+          <div class="example-row">
+            <div class="tile mini">C</div><div class="tile mini">A</div><div class="tile mini">N</div><div class="tile mini absent">T</div><div class="tile mini">O</div>
+          </div>
+          <p>La <b>T</b> no está en la palabra.</p>
+          <hr />
+          <p><b>Una palabra nueva cada día</b>, a medianoche.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Estadísticas / resultado -->
+    <div id="modal-stats" class="overlay hidden">
+      <div class="modal" role="dialog" aria-modal="true" aria-label="Estadísticas">
+        <div class="modal-header">
+          <h2 id="stats-title">ESTADÍSTICAS</h2>
+          <button class="icon-btn close" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="modal-body" id="stats-body"><!-- se rellena desde JS --></div>
+      </div>
+    </div>
+
+    <!-- Modal: Ajustes -->
+    <div id="modal-settings" class="overlay hidden">
+      <div class="modal" role="dialog" aria-modal="true" aria-label="Ajustes">
+        <div class="modal-header">
+          <h2>AJUSTES</h2>
+          <button class="icon-btn close" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-row">
+            <div>
+              <b>Modo difícil</b>
+              <small>Las pistas reveladas deben reutilizarse</small>
+            </div>
+            <button id="toggle-hard" class="switch" role="switch" aria-checked="false"><span></span></button>
+          </div>
+          <div class="setting-row">
+            <div>
+              <b>Tema oscuro</b>
+            </div>
+            <button id="toggle-dark" class="switch" role="switch" aria-checked="false"><span></span></button>
+          </div>
+          <div class="setting-row">
+            <div>
+              <b>Alto contraste</b>
+              <small>Colores azul y amarillo para daltónicos</small>
+            </div>
+            <button id="toggle-contrast" class="switch" role="switch" aria-checked="false"><span></span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

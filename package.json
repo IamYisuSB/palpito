@@ -1,0 +1,21 @@
+{
+  "name": "palpito",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Pálpito: juego diario de adivinar palabras de 5 letras en español (sin backend)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dict": "node scripts/build-dictionary.mjs"
+  },
+  "devDependencies": {
+    "an-array-of-spanish-words": "^2.0.0",
+    "typescript": "^5.6.0",
+    "vite": "^5.4.0",
+    "vitest": "^2.1.0"
+  }
+}
